@@ -1,3 +1,5 @@
+import java.time.temporal.TemporalAccessor;
+
 public class ThreadCommunication {
 
     public static void main(String[] args) {
@@ -7,7 +9,7 @@ public class ThreadCommunication {
         Runnable producer = new Runnable(){
             @Override
             public void run(){
-                for(int i = 1; i < 5; i++){
+                for(int i = 1; i <= 10; i++){
                     resource.produce(i);
                 }    
             }
@@ -16,14 +18,20 @@ public class ThreadCommunication {
         Thread producerThread = new Thread(producer);
 
         Thread consumerThread = new Thread(()->{
-            for(int i = 1; i < 5; i++){
+            for(int i = 1; i <= 5; i++){
                 resource.consume();
+            }
+        });
+
+        Thread consumerThread2 = new Thread(()->{
+            for(int i = 1; i <= 5; i++){
+                resource.consume2();
             }
         });
 
         producerThread.start();
         consumerThread.start();
-
+        consumerThread2.start();
 
     }
 
@@ -38,25 +46,27 @@ class Resource {
         public Boolean hasValue = false;
 
         public synchronized void consume(){
-            //System.out.println("Waiting to consume...");
+            System.out.println("Waiting to consume...");
 
             while(!hasValue){
             try {
                 wait();
+                Thread.sleep(1000); // Simulating some processing time
             } catch (InterruptedException e) {
                 System.out.println("Thread interrupted: " + e.getMessage());
             }           
             }
             System.out.println("Consumed: " + value);
             hasValue = false;
-            notify();
+            notifyAll();
         }
 
         public synchronized void produce(Integer value){
-            //System.out.println("Producing: " + value);
+            System.out.println("Waiting at producer");
             while(hasValue){
                 try{
                     wait();
+                    Thread.sleep(1000); 
                 }catch(InterruptedException e){
                     System.out.println("Thread interrupted: " + e.getMessage());
                 }
@@ -64,6 +74,22 @@ class Resource {
             this.value = value;
             hasValue = true;
             System.out.println("Produced: " + value);
-            notify();
+            notifyAll();
+        }
+
+        public synchronized void consume2(){
+            System.out.println("Waiting at consume2...");
+
+            while(!hasValue){
+            try {
+                wait();
+                Thread.sleep(1000); 
+            } catch (InterruptedException e) {
+                System.out.println("Thread interrupted: " + e.getMessage());
+            }           
+            }
+            System.out.println("Consumed2: " + value);
+            hasValue = false;
+            notifyAll();
         }
     }

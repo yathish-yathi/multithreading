@@ -14,15 +14,16 @@ public class ExecutorFramework {
             System.out.println("Task " + taskId + " submitted in thread: " + Thread.currentThread().getName());
         }
 
+        executor.shutdown();
+
         try {
             executor.awaitTermination(3000,TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
            System.out.println("Executor interrupted: " + e.getMessage());
         }
 
         //executor.shutdown();
-        executor.shutdownNow();
+        //executor.shutdownNow();
 
         Long timetaken = System.currentTimeMillis() - startTime;
         System.out.println("All tasks completed in thread: " + Thread.currentThread().getName()+" in "+timetaken);

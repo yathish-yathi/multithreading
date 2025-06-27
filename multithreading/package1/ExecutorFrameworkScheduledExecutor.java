@@ -5,7 +5,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class ExecutorFramework3 {
+public class ExecutorFrameworkScheduledExecutor {
     public static void main(String[] args) {
         ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(1);
         System.out.println("Scheduling task to run");
@@ -26,7 +26,7 @@ public class ExecutorFramework3 {
 
 
          
-        Future<String> ScheduledFuture = scheduledExecutor.schedule(()->{
+        ScheduledFuture<String> ScheduledFuture = scheduledExecutor.schedule(()->{
             System.out.println("Task running...");
             return "hello";
         }, 1000, TimeUnit.MILLISECONDS);
